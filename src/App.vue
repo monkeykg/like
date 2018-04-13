@@ -30,7 +30,7 @@ export default {
     }
   },
   created(){
-    axios.get('http://localhost:8080/static/data.json').then(Response=>{
+    axios.get('http://192.168.0.174:8080/static/data.json').then(Response=>{
       this.seller=Response.data.seller;
       console.dir(this.seller)
     }).catch(error=>{
@@ -40,6 +40,9 @@ export default {
 };
 </script>
 <style lang="stylus">
+@import 'common/stylus/base'
+
+
 #app
   .tab
     display flex
