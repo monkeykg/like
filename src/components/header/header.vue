@@ -14,13 +14,30 @@
                 <span class="icon" :class='classMap[seller.supports[0].type]'></span>
                 <span class='text'>{{seller.supports[0].description}}</span>
             </div>
-            <div class='support-count' v-if="seller.supports">
-                <span class="count">{{seller.supports.length}}</span>
-                <i></i>
+            <div class='support-count' v-if="seller.supports" @click="showDetail">
+                <span class="count">{{seller.supports.length}}个</span>
+                <i class="icon-gengduo iconfont"></i>
             </div>
          </div> 
       </div>
-      <div class='bulletin-wrapper'></div>
+      <div class='bulletin-wrapper'  @click="showDetail">
+        <span class="bulletin-title"></span>
+        <span class="bulletin-text">{{seller.bulletin}}</span>
+        <i class="icon-gengduo iconfont"></i>
+      </div>
+      <div class="background">
+          <img :src="seller.avatar" alt="" width='100%' height='100%'>
+      </div>
+      <div class="detail" v-show="detailShow">
+          <div class="detail-wrapper clearfix"> 
+              <div class='detail-main'> 
+                  <h1 class="name">{{seller.name}}</h1>
+              </div>
+          </div>
+          <div class='detail-close' @click="closeDetail"> 
+              <i class='icon-guanbi iconfont'></i>
+          </div>
+      </div>
   </div>
 </template>
 
@@ -30,10 +47,18 @@ export default {
   props:['seller'],
   data(){
       return{
-          classMap:['decrease','discount','special','invoice','guarantee']
+          classMap:['decrease','discount','special','invoice','guarantee'],
+            detailShow:false
       }
   },
-
+methods:{
+showDetail:function(){
+    this.detailShow=true
+},
+closeDetail(){
+    this.detailShow=false
+}
+}
 }
 </script>
 <style lang="stylus" scoped>
@@ -41,10 +66,12 @@ export default {
 
 .header
     color:#fff
-    background-color #000000
+    background rgba(7,17,27,0.5)
+    position relative
     .content-wrapper
         padding 24px 12px 18px 24px
         font-size 0
+        position  relative
         .avatar
             display inline-block
             vertical-align top
@@ -52,6 +79,7 @@ export default {
              border-radius 2px
         .content
             display inline-block
+           
             font-size 14px
             margin-left:16px
             .title
@@ -98,7 +126,92 @@ export default {
                     font-size 12px
                     line-height 10px
                     font-weight 200
+            .support-count
+                position absolute 
+                right 12px
+                bottom 18px
+                padding 0 8px
+                height 24px
+                line-height 24px 
+                border-radius 14px 
+                background rgba(0,0,0,0.2)
+                text-align center
+                .count
+                    font-size 10px
+                .iconfont
+                    font-size 10px    
+    .bulletin-wrapper
+        height 28px
+        line-height 28px
+        padding 0 22px 0 12px
+        position relative
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
+        background rgba(7,17,27,0.2)
+        .bulletin-title
+            display inline-block
+            width 22px
+            height 12px
+            bg-img('bulletin')
+            background-repeat no-repeat
+            background-size 22px 12px
+        .bulletin-text
+            font-size 10px  
+            margin 0 4px
+        .iconfont
+            position absolute 
+            font-size 10px  
+            right 12px
+            top 4px
+    .background
+        position absolute  
+        top 0
+        left 0
+        width 100%
+        height 100%
+        z-index -1
+        filter blur(10px)
+    .detail
+        position fixed
+        top 0
+        left 0
+        z-index 100
+        height 100%
+        width 100%
+        overflow-y  auto 
+        background rgba(7,17,27,0.8)
+        // filter blur(10px)
+        .detail-wrapper
+            min-height 100%
+            width 100%
+            .detail-main
+                margin-top 64px
+                padding-bottom 64px
+                .name
+                    font-weight 700
+                    font-size 16px
+                    line-height 16px
+                    color rgb(255,255,255)
+                    text-align center
 
+        .detail-close
+            position relative
+            width 32px
+            height 32px
+            margin -64px auto 0 auto
+            clear both
+            font-size 32px
+            .icon-guanbi
+                color rgb(225,225,225,0.5)
+
+
+
+
+
+
+                    
+                    
 
 
 
