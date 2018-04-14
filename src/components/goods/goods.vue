@@ -1,15 +1,15 @@
 <template>
 <div class=goods> 
-  <div class='menu-wrapper'>
+  <div class='menu-wrapper' ref='menuwrapper'>
     <ul>
-      <li v-for="val in goods" class="menu-item">
+      <li v-for="(val,index) in goods" class="menu-item" :class="{'current':currentIndex==index}" @click="selectMenu(index,$event)">
         <span class='text'><span v-show="val.type>0" class="icon" :class="classMap[val.type]"></span>{{val.name}}</span>
       </li>
     </ul>
   </div>
-  <div class="foods-wrapper">
+  <div class="foods-wrapper" ref='foodswrapper'>
     <ul>
-      <li v-for="item in goods" class='food-list'>
+      <li v-for="item in goods" class='food-list food-list-hook'>
         <h1 class="title">{{item.name}}</h1>
         <ul>
           <li class='food-item' v-for="food in item.foods">
@@ -37,22 +37,72 @@
 </template>
 <script>
 import axios from 'axios'
+import BScroll from 'better-scroll'
 export default {
   name:'goods',
   props:['seller'],
   data(){
     return{
       goods:[],
+      listHeight:[],
+      scrollY:0,
        classMap:['decrease','discount','special','invoice','guarantee']
+    }
+  },
+  computed:{
+    currentIndex(){
+      for(let i=0;i<this.listHeight.lenght;i++){
+        let height1=this.listHeight[i]
+        let height2=this.listHeight[i+1]
+        if(!height2 ||(this.scrollY>=height1 && this.scrollY<height2)){
+          return i;
+        }
+      }
+      return 0;
     }
   },
   created(){
     axios.get('http://192.168.0.174:8080/static/data.json').then(Response=>{
       this.goods=Response.data.goods
+      this.$nextTick(()=>{
+         this. _initScroll();
+         this._calculateHeight();
+      })
+     
       console.dir(this.goods)
     }).catch(error=>{
       console.log(error)
     })
+  },
+  methods:{
+    _initScroll(){
+      this.menuScroll=new BScroll(this.$refs.menuwrapper,{
+        click: true
+      })
+      this.foodScroll=new BScroll(this.$refs.foodswrapper,{
+      click: true,
+       probeType: 3
+      })
+      this.foodScroll.on('scroll',(pos)=>{
+        this.scrollY=Math.abs(Math.round(pos.y))
+      })
+    },
+    _calculateHeight(){
+      let foodList=this.$refs.foodswrapper.getElementsByClassName('food-list-hook')
+      let height=0
+      this.listHeight.push(height)
+      for(let i=0;i< foodList.length;i++){
+        let item=foodList[i]
+        height+=item.clientHeight
+        this.listHeight.push(height)
+      }
+      },
+      selectMenu(index,event){
+        // console.log(index)
+        let foodList=this.$refs.foodswrapper.getElementsByClassName('food-list-hook');
+         let el=foodList[index];
+         this.foodScroll.scrollToElement(el,300)
+      }
   }
 }
 </script>
@@ -75,6 +125,14 @@ export default {
       width 56px
       line-height 14px
       padding 0 12px
+      &.current
+        position relative
+        z-index 10
+        margin-top -1px
+        background #ffffff
+        font-weight 700
+        .text
+          border none
       .icon
         display inline-block
         vertical-align top
@@ -130,8 +188,7 @@ export default {
           color rgb(7,17,27)
         .desc
           margin-bottom 8px
-          height 10px
-          line-height 10px
+          line-height 12px
           font-size 10px
           color rgb(147,153,159)
         .extra
