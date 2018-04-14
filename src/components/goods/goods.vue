@@ -33,14 +33,19 @@
       </li>
     </ul>
   </div>
+  <shopcar :delivery-price='seller.deliveryPrice' :min-price='seller.minPrice'></shopcar>
 </div>
 </template>
 <script>
 import axios from 'axios'
 import BScroll from 'better-scroll'
+import shopcar from '@/components/shopcar/shopcar.vue'
 export default {
   name:'goods',
   props:['seller'],
+  components:{
+    shopcar
+  },
   data(){
     return{
       goods:[],
