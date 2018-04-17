@@ -67,7 +67,7 @@ export default {
     }
   },
   created(){
-    axios.get('http://192.168.0.174:8080/static/data.json').then(Response=>{
+    axios.get('http://localhost:8080/static/data.json').then(Response=>{
       this.goods=Response.data.goods
       this.$nextTick(()=>{
          this. _initScroll();
