@@ -7,17 +7,49 @@
                       <span class="iconfont icon-gouwuche"></span>
                   </div>
               </div>
-              <div class="price">0元</div>
+              <div class="price">￥{{totalPrice}}</div>
               <div class="desc">配送费￥{{deliveryPrice}}元</div>
           </div>
-          <div class="content-right"></div>
+          <div class="content-right">
+              <div class="pay">
+                  ￥{{minPrice}}元起送
+              </div>
+          </div>
       </div>
   </div>
 </template>
 <script>
 export default {
   name:'shopcar',
- props:['deliveryPrice','minPrice']
+//  props:['deliveryPrice','minPrice','selectFoods'],
+props:{
+    selectFoods:{
+        type:Array,
+        default(){
+            return [{
+                price:10,
+                count:1
+            }];
+        }
+        },
+    deliveryPrice:{
+        default:0,
+        type:Number
+    },
+    minPrice:{
+        default:0,
+        type:Number
+    },
+},
+ computed:{
+     totalPrice(){
+         let total=0;
+         this.selectFoods.forEach((food)=>{
+             total+=food.price*food.count
+         })
+         return total;
+     }
+ }
 }
 </script>
 <style lang="stylus">
@@ -76,7 +108,15 @@ export default {
         .content-right 
             flex 0 0 105px
             width 105px
-            
+            .pay
+                font-size 12px
+                height 48px
+                line-height 48px
+                color rgba(255,255,255,0.4)
+                font-weight 700
+                background #2b333b
+                text-align center
+
 
 </style>
 
