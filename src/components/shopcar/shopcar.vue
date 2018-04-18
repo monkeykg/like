@@ -76,7 +76,7 @@ export default {
         .content-right 
             flex 0 0 105px
             width 105px
-
+            
 
 </style>
 
