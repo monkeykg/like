@@ -27,6 +27,9 @@
                 <span class="now">￥{{food.price}}</span>
                 <span class='old' v-show='food.oldPrice'>￥{{food.oldPrice}}</span>
               </div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol :food='food'></cartcontrol>
+              </div>
             </div>
           </li>
         </ul>
@@ -40,11 +43,13 @@
 import axios from 'axios'
 import BScroll from 'better-scroll'
 import shopcar from '@/components/shopcar/shopcar.vue'
+import cartcontrol from '@/components/cartcontrol/cartcontrol.vue'
 export default {
   name:'goods',
   props:['seller'],
   components:{
-    shopcar
+    shopcar,
+    cartcontrol
   },
   data(){
     return{
@@ -185,6 +190,7 @@ export default {
         margin-right 10px
       .content
         flex 1
+        position relative
         .name
           margin 2px 0 8px 0
           height 14px
@@ -215,5 +221,10 @@ export default {
             text-decoration line-through
             fone-size 10px
             color rgb(147,153,159)
+        .cartcontrol-wrapper
+          position absolute
+          right 0
+          bottom 12px
+
 </style>
 

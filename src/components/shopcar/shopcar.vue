@@ -3,16 +3,18 @@
       <div class="content">
           <div class="content-left">
               <div class="logo-wrapper">
-                  <div class="logo">
-                      <span class="iconfont icon-gouwuche"></span>
+                  <div class="logo" :class="{'heightlight':totalCount>0}">
+                      <span class="iconfont icon-gouwuche" :class="{'heightlight':totalCount>0}"></span>
                   </div>
+                  <div class='num' v-show="totalCount>0">{{totalCount}}</div>
               </div>
-              <div class="price">￥{{totalPrice}}</div>
+              <div class="price" :class="{'heightlight':totalCount>0}">￥{{totalPrice}}</div>
               <div class="desc">配送费￥{{deliveryPrice}}元</div>
           </div>
           <div class="content-right">
-              <div class="pay">
-                  ￥{{minPrice}}元起送
+              <div class="pay" :class="{'not-enough':this.minPrice>this.totalPrice,'enough':this.minPrice<=this.totalPrice}">
+                  <!-- ￥{{minPrice}}元起送 -->
+                  {{payDesc}}
               </div>
           </div>
       </div>
@@ -24,12 +26,14 @@ export default {
 //  props:['deliveryPrice','minPrice','selectFoods'],
 props:{
     selectFoods:{
-        type:Array,
+        type:Array,//当type是object和arry时候，default要返回对象
         default(){
-            return [{
-                price:10,
-                count:1
-            }];
+            return [
+                {
+                    price:3,
+                    count:2
+                }
+            ];
         }
         },
     deliveryPrice:{
@@ -48,6 +52,23 @@ props:{
              total+=food.price*food.count
          })
          return total;
+     },
+     totalCount(){
+         let count=0
+         this.selectFoods.forEach((food)=>{
+           count+=food.count
+         })
+         return count;
+     },
+     payDesc(){
+         if(this.totalPrice===0){
+             return `￥ ${this.minPrice}元起送`;
+         }else if(this.totalPrice<this.minPrice){
+             let deff=this.minPrice-this.totalPrice
+             return `还差￥${deff}元起送`;
+         }else{
+             return '去结算';
+         }
      }
  }
 }
@@ -84,10 +105,28 @@ props:{
                    border-radius 50%
                    background #2b343c
                    text-align center
+                   &.heightlight
+                    background rgb(0,160,220) 
                    .iconfont
                        font-size 24px
                        color #80858a
                        line-height 44px
+                       &.heightlight 
+                            color #fff
+                .num
+                    position absolute
+                    top:0
+                    right 0
+                    width 24px
+                    height 16px
+                    line-height 16px
+                    text-align center 
+                    border-radius 16px
+                    font-size 9px
+                    font-weight 700
+                    color #ffffff
+                    background rgb(240,20,20)
+                    box-shadow 0 4px 8px 0 rgba(0,0,0,0.4)
             .price
                 display inline-block
                 vertical-align top
@@ -98,6 +137,8 @@ props:{
                 font-size 16px
                 font-weight 700
                 color rgba(255,255,255,0.4)
+                &.heightlight
+                    color #fff
             .desc    
                 display inline-block  
                 vertical-align top
@@ -116,6 +157,11 @@ props:{
                 font-weight 700
                 background #2b333b
                 text-align center
+                &.not-enough
+                    background 2b333b
+                &.enough 
+                    background #00b43c
+                    color #fff  
 
 
 </style>
